@@ -86,7 +86,6 @@ export default function Cep() {
   const handleFetchAddress = useCallback(
     async (zipCode: string) => {
       const code = zipCode.replace(/[^0-9]/g, '');
-      console.log(code);
 
       if (code.length !== 8) return;
 
