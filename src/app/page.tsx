@@ -4,42 +4,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCallback, useEffect } from 'react';
-import { zipCodeMask } from '@/utils/zipCodeMask';
-
-const schemaForm = z
-  .object({
-    address: z.object({
-      zipCode: z.string().min(8, 'Por favor, informe um CEP válido!'),
-      street: z.string().min(1, 'Por favor, informe uma rua válido!'),
-      district: z.string().min(1, 'Por favor, informe um bairro válido!'),
-      number: z.string().min(1, 'Por favor, informe um número válido!'),
-      complement: z.string(),
-      city: z.string().min(1, 'Por favor, informe uma cidade válida!'),
-      state: z.string().min(1, 'Por favor, informe um estado válido!')
-    })
-  })
-  .transform((field) => ({
-    address: {
-      zipCode: field.address.zipCode,
-      street: field.address.street,
-      district: field.address.district,
-      number: field.address.number,
-      complement: field.address.complement,
-      city: field.address.city,
-      state: field.address.state
-    }
-  }));
+import { schemaForm } from './schema';
+import { AddressProps } from './type';
 
 type formProps = z.infer<typeof schemaForm>;
-
-type AddressProps = {
-  cep: string;
-  bairro: string;
-  complemento: string;
-  uf: string;
-  logradouro: string;
-  localidade: string;
-};
 
 export default function Cep() {
   const {
@@ -104,6 +72,7 @@ export default function Cep() {
   useEffect(() => {
     setValue('address.zipCode', zipCode);
 
+    if (zipCode == undefined) return;
     if (zipCode.length !== 8) return;
 
     handleFetchAddress(zipCode);
